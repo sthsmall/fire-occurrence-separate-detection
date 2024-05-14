@@ -8,8 +8,8 @@
 
 # Train/val/test sets as 1) dir: path/to/imgs, 2) file: path/to/imgs.txt, or 3) list: [path/to/imgs1, path/to/imgs2, ..]
 
-train: F:\github\fire-occurrence-separate-detection\D-Fire\train\images
-val: F:\github\fire-occurrence-separate-detection\D-Fire\test\images
+train: dataset//train//images
+val: dataset//test//images
 
 nc: 2
 
