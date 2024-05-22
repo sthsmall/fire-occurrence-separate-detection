@@ -14,5 +14,5 @@ val: dataset//test//images
 nc: 2
 
 names:
-  0: Fire
-  1: Smoke
+  0: Smoke
+  1: Fire
