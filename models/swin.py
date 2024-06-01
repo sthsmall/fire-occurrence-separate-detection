@@ -368,6 +368,8 @@ class SwinStage(nn.Module):
         return attn_mask
 
     def forward(self, x):
+        x = x.half()
+
         B, C, H, W = x.shape
         x = x.permute(0, 2, 3, 1).contiguous().view(B, H*W, C)
         attn_mask = self.create_mask(x, H, W)  # [nW, Mh*Mw, Mh*Mw]
