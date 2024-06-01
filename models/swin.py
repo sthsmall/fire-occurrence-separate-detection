@@ -156,6 +156,7 @@ class WindowAttention(nn.Module):
         self.softmax = nn.Softmax(dim=-1)
 
     def forward(self, x, mask: Optional[torch.Tensor] = None):
+        x = x.to(torch.float16)
         """
         Args:
             x: input features with shape of (num_windows*B, Mh*Mw, C)
@@ -197,7 +198,7 @@ class WindowAttention(nn.Module):
         # @: multiply -> [batch_size*num_windows, num_heads, Mh*Mw, embed_dim_per_head]
         # transpose: -> [batch_size*num_windows, Mh*Mw, num_heads, embed_dim_per_head]
         # reshape: -> [batch_size*num_windows, Mh*Mw, total_embed_dim]
-        x = (attn @ v).transpose(1, 2).reshape(B_, N, C)
+        x = (attn @ v.to(attn.dtype)).transpose(1, 2).reshape(B_, N, C)
         x = self.proj(x)
         x = self.proj_drop(x)
         return x
