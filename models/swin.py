@@ -414,7 +414,7 @@ class PatchEmbed(nn.Module):
             x = F.pad(x, (0, self.patch_size[1] - W % self.patch_size[1],
                           0, self.patch_size[0] - H % self.patch_size[0],
                           0, 0))
-
+        x = x.to(torch.float16)
         # 下采样patch_size倍
         x = self.proj(x)
         x = x.to(torch.float32)
