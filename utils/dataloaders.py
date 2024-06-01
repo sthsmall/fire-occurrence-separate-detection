@@ -1329,6 +1329,8 @@ class ClassificationDataset(torchvision.datasets.ImageFolder):
         self.cache_disk = cache == "disk"
         self.samples = [list(x) + [Path(x[0]).with_suffix(".npy"), None] for x in self.samples]  # file, index, npy, im
 
+        self.augment = augment
+
     def __getitem__(self, i):
         """Fetches and transforms an image sample by index, supporting RAM/disk caching and Augmentations."""
         f, j, fn, im = self.samples[i]  # filename, index, filename.with_suffix('.npy'), image
@@ -1344,7 +1346,24 @@ class ClassificationDataset(torchvision.datasets.ImageFolder):
             sample = self.album_transforms(image=cv2.cvtColor(im, cv2.COLOR_BGR2RGB))["image"]
         else:
             sample = self.torch_transforms(im)
+
+        self.save_images(f, sample)
+
         return sample, j
+
+    def save_images(self, f, sample):
+        # 保存数据增强后的图片，用于对比训练和验证的图片预处理是否一致
+        print('   -------------self.augment: ', self.augment)
+        if self.augment:
+            print('   -------------f: ', f)
+            a = f.split('/train/')[0] + '/train_aug/' + os.path.basename(f)[:-4] + '_train.jpg'
+            print('   -------------a: ', a)
+            torchvision.utils.save_image(sample, a)
+        else:
+            print('   -------------f: ', f)
+            a = f.split('/test/')[0] + '/train_aug/' + os.path.basename(f)[:-4] + '_test.jpg'
+            print('   -------------a: ', a)
+            torchvision.utils.save_image(sample, a)
 
 
 def create_classification_dataloader(
