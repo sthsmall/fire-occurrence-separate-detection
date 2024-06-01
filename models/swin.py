@@ -399,11 +399,10 @@ class PatchEmbed(nn.Module):
         self.patch_size = patch_size
         self.in_chans = in_c
         self.embed_dim = embed_dim
-        self.proj = nn.Conv2d(in_c, embed_dim, kernel_size=patch_size, stride=patch_size,dtype=torch.float32)
+        self.proj = nn.Conv2d(in_c, embed_dim, kernel_size=patch_size, stride=patch_size)
         self.norm = norm_layer(embed_dim) if norm_layer else nn.Identity()
 
     def forward(self, x):
-        x = x.to(torch.float32)
         _, _, H, W = x.shape
 
         # padding
@@ -418,6 +417,7 @@ class PatchEmbed(nn.Module):
 
         # 下采样patch_size倍
         x = self.proj(x)
+        x = x.to(torch.float32)
         B, C, H, W = x.shape
         # flatten: [B, C, H, W] -> [B, C, HW]
         # transpose: [B, C, HW] -> [B, HW, C]
