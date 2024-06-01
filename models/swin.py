@@ -200,6 +200,7 @@ class WindowAttention(nn.Module):
         x = (attn @ v).transpose(1, 2).reshape(B_, N, C)
         x = self.proj(x)
         x = self.proj_drop(x)
+        x.half()
         return x
 
 
@@ -368,8 +369,6 @@ class SwinStage(nn.Module):
         return attn_mask
 
     def forward(self, x):
-        x = x.half()
-
         B, C, H, W = x.shape
         x = x.permute(0, 2, 3, 1).contiguous().view(B, H*W, C)
         attn_mask = self.create_mask(x, H, W)  # [nW, Mh*Mw, Mh*Mw]
