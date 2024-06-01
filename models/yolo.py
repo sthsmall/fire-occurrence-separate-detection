@@ -24,7 +24,7 @@ if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))  # add ROOT to PATH
 if platform.system() != "Windows":
     ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
-
+from models.swin import SwinStage,PatchMerging,PatchEmbed
 from models.common import (
     C3,
     C3SPP,
@@ -49,6 +49,7 @@ from models.common import (
     GhostConv,
     Proto,
 )
+
 from models.experimental import MixConv2d
 from utils.autoanchor import check_anchor_order
 from utils.general import LOGGER, check_version, check_yaml, colorstr, make_divisible, print_args
@@ -411,6 +412,9 @@ def parse_model(d, ch):
             nn.ConvTranspose2d,
             DWConvTranspose2d,
             C3x,
+            SwinStage,
+            PatchMerging,
+            PatchEmbed,
         }:
             c1, c2 = ch[f], args[0]
             if c2 != no:  # if not output
