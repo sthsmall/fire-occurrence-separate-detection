@@ -156,7 +156,7 @@ class WindowAttention(nn.Module):
         self.softmax = nn.Softmax(dim=-1)
 
     def forward(self, x, mask: Optional[torch.Tensor] = None):
-        x = x.to(torch.float16)
+        x = x.to(torch.float32)
         """
         Args:
             x: input features with shape of (num_windows*B, Mh*Mw, C)
@@ -243,6 +243,7 @@ class SwinTransformerBlock(nn.Module):
         self.mlp = Mlp(in_features=dim, hidden_features=mlp_hidden_dim, act_layer=act_layer, drop=drop)
 
     def forward(self, x, attn_mask):
+        x = x.to(torch.float16)
         H, W = self.H, self.W
         B, L, C = x.shape
         assert L == H * W, "input feature has wrong size"
