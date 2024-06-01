@@ -42,7 +42,6 @@ class DropPath(nn.Module):
         self.drop_prob = drop_prob
 
     def forward(self, x):
-        x = x.to(torch.float32)
         return drop_path_f(x, self.drop_prob, self.training)
 
 
@@ -100,7 +99,6 @@ class Mlp(nn.Module):
         self.drop2 = nn.Dropout(drop)
 
     def forward(self, x):
-        x = x.to(torch.float32)
         x = self.fc1(x)
         x = self.act(x)
         x = self.drop1(x)
@@ -158,7 +156,6 @@ class WindowAttention(nn.Module):
         self.softmax = nn.Softmax(dim=-1)
 
     def forward(self, x, mask: Optional[torch.Tensor] = None):
-        x = x.to(torch.float32)
         """
         Args:
             x: input features with shape of (num_windows*B, Mh*Mw, C)
@@ -200,7 +197,7 @@ class WindowAttention(nn.Module):
         # @: multiply -> [batch_size*num_windows, num_heads, Mh*Mw, embed_dim_per_head]
         # transpose: -> [batch_size*num_windows, Mh*Mw, num_heads, embed_dim_per_head]
         # reshape: -> [batch_size*num_windows, Mh*Mw, total_embed_dim]
-        x = (attn @ v.to(attn.dtype)).transpose(1, 2).reshape(B_, N, C)
+        x = (attn.to(v.dtype) @ v).transpose(1, 2).reshape(B_, N, C)
         x = self.proj(x)
         x = self.proj_drop(x)
         return x
@@ -245,7 +242,6 @@ class SwinTransformerBlock(nn.Module):
         self.mlp = Mlp(in_features=dim, hidden_features=mlp_hidden_dim, act_layer=act_layer, drop=drop)
 
     def forward(self, x, attn_mask):
-        x = x.to(torch.float32)
         H, W = self.H, self.W
         B, L, C = x.shape
         assert L == H * W, "input feature has wrong size"
@@ -372,7 +368,6 @@ class SwinStage(nn.Module):
         return attn_mask
 
     def forward(self, x):
-        x.to(torch.float32)
         B, C, H, W = x.shape
         x = x.permute(0, 2, 3, 1).contiguous().view(B, H*W, C)
         attn_mask = self.create_mask(x, H, W)  # [nW, Mh*Mw, Mh*Mw]
@@ -403,7 +398,6 @@ class PatchEmbed(nn.Module):
         self.norm = norm_layer(embed_dim) if norm_layer else nn.Identity()
 
     def forward(self, x):
-        x = x.to(torch.float32)
         _, _, H, W = x.shape
 
         # padding
@@ -446,7 +440,6 @@ class PatchMerging(nn.Module):
         self.norm = norm_layer(4 * dim)
 
     def forward(self, x):
-        x = x.to(torch.float32)
         """
         x: B, C, H, W
         """
