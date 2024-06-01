@@ -416,7 +416,7 @@ class PatchEmbed(nn.Module):
                           0, 0))
 
         # 下采样patch_size倍
-        x = x.to(self.proj.weight.dtype)
+        x = x.to(torch.float32)
         x = self.proj(x)
         x = x.to(torch.float32)
         B, C, H, W = x.shape
