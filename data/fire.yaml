@@ -8,8 +8,8 @@
 
 # Train/val/test sets as 1) dir: path/to/imgs, 2) file: path/to/imgs.txt, or 3) list: [path/to/imgs1, path/to/imgs2, ..]
 
-train: dataset//D-Fire-m0529//train//images
-val: dataset//D-Fire-m0529//test//images
+train: dataset//D-Fire//train//images
+val: dataset//D-Fire//test//images
 
 nc: 2
 
