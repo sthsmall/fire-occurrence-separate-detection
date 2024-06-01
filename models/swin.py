@@ -414,10 +414,10 @@ class PatchEmbed(nn.Module):
             x = F.pad(x, (0, self.patch_size[1] - W % self.patch_size[1],
                           0, self.patch_size[0] - H % self.patch_size[0],
                           0, 0))
-        x = x.to(torch.float16)
+
+        x = x.to(torch.float32)  # 确保张量为float32类型
         # 下采样patch_size倍
         x = self.proj(x)
-        x = x.to(torch.float32)
         B, C, H, W = x.shape
         # flatten: [B, C, H, W] -> [B, C, HW]
         # transpose: [B, C, HW] -> [B, HW, C]
