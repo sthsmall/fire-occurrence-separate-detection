@@ -42,6 +42,7 @@ class DropPath(nn.Module):
         self.drop_prob = drop_prob
 
     def forward(self, x):
+        x = x.to(torch.float32)
         return drop_path_f(x, self.drop_prob, self.training)
 
 
@@ -99,6 +100,7 @@ class Mlp(nn.Module):
         self.drop2 = nn.Dropout(drop)
 
     def forward(self, x):
+        x = x.to(torch.float32)
         x = self.fc1(x)
         x = self.act(x)
         x = self.drop1(x)
@@ -370,6 +372,7 @@ class SwinStage(nn.Module):
         return attn_mask
 
     def forward(self, x):
+        x.to(torch.float32)
         B, C, H, W = x.shape
         x = x.permute(0, 2, 3, 1).contiguous().view(B, H*W, C)
         attn_mask = self.create_mask(x, H, W)  # [nW, Mh*Mw, Mh*Mw]
@@ -400,6 +403,7 @@ class PatchEmbed(nn.Module):
         self.norm = norm_layer(embed_dim) if norm_layer else nn.Identity()
 
     def forward(self, x):
+        x = x.to(torch.float32)
         _, _, H, W = x.shape
 
         # padding
@@ -442,6 +446,7 @@ class PatchMerging(nn.Module):
         self.norm = norm_layer(4 * dim)
 
     def forward(self, x):
+        x = x.to(torch.float32)
         """
         x: B, C, H, W
         """
