@@ -6,7 +6,6 @@ depth_multiple: 0.33 # model depth multiple
 width_multiple: 0.50 # layer channel multiple
 
 anchors:
-  - anchors:
   - [ 15.741,   12.595,   29.437,   22.334,   47.344,   41.091 ]
   - [ 96.160,   58.683,  141.140,  137.970,  267.880,  118.930 ]
   -  [ 299.030,  246.270,  512.880,  192.010,  570.670,  308.110 ]
