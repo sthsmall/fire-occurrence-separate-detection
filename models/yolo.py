@@ -24,8 +24,8 @@ if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))  # add ROOT to PATH
 if platform.system() != "Windows":
     ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
+    
 
-from models.swin import SwinStage,PatchMerging,PatchEmbed
 from models.common import (
     C3,
     C3SPP,
@@ -411,10 +411,7 @@ def parse_model(d, ch):
             C3Ghost,
             nn.ConvTranspose2d,
             DWConvTranspose2d,
-            C3x,
-            SwinStage,
-            PatchMerging,
-            PatchEmbed
+            C3x
         }:
             c1, c2 = ch[f], args[0]
             if c2 != no:  # if not output
